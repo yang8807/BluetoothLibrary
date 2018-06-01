@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+    <TextView
+        android:id="@+id/device_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="12dp"
+        android:gravity="center"
+        android:text="未连接"
+        android:textColor="@color/colorPrimary"
+        android:textSize="22sp" />
+
+    <Button
+        android:id="@+id/start_ble"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="12dp"
+        android:text="连接蓝牙" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#c3c3c3"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+
+        <CheckBox
+            android:id="@+id/open_heart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="开启心率"
+            tools:ignore="Suspicious0dp" />
+
+        <CheckBox
+            android:id="@+id/open_spo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="开启血氧"
+            tools:ignore="Suspicious0dp" />
+
+        <CheckBox
+            android:id="@+id/open_hrv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="开启HRV"
+            tools:ignore="Suspicious0dp" />
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:background="#DDDDDD"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="DP测量" />
+
+        <RadioGroup
+            android:id="@+id/radio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/man"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="男" />
+
+            <RadioButton
+                android:id="@+id/woman"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="女" />
+        </RadioGroup>
+
+        <EditText
+            android:id="@+id/input_age"
+            android:layout_width="wrap_content"
+            android:layout_height="45dp"
+            android:layout_marginLeft="16dp"
+            android:hint="请输入年龄"
+            android:inputType="number" />
+
+        <CheckBox
+            android:id="@+id/open_dp"
+            android:layout_marginLeft="12dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="开启测量" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/response_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="22dp"
+        android:background="#c3c3c3"
+        android:gravity="center"
+        android:hint="---"
+        android:text="dfsdfasd"
+        android:padding="10dp"
+        android:textColor="@color/colorAccent"
+        android:textSize="20sp" />
+
+
+    <Button
+        android:id="@+id/mkdir"
+        android:layout_marginTop="150dp"
+        android:layout_width="match_parent"
+        android:text="重新创建文件"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>
