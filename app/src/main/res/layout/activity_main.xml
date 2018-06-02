@@ -8,6 +8,15 @@
     tools:context=".MainActivity">
 
     <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="
+        【安装后请去权限管理开启所有权限，否则无法使用】
+        数据存储位置请到手机根目录下找BLE_UPI文件夹，
+        需要自己输入文件名并手动点击【创建文件】可创建格式为【时间_文件名.csv】文件
+        【不创建文件数据不存储】" />
+
+    <TextView
         android:id="@+id/device_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -16,7 +25,7 @@
         android:gravity="center"
         android:text="未连接"
         android:textColor="@color/colorPrimary"
-        android:textSize="22sp" />
+        android:textSize="32sp" />
 
     <Button
         android:id="@+id/start_ble"
@@ -29,6 +38,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         android:background="#c3c3c3"
         android:gravity="center"
         android:orientation="horizontal">
@@ -37,21 +47,21 @@
         <CheckBox
             android:id="@+id/open_heart"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="45dp"
             android:text="开启心率"
             tools:ignore="Suspicious0dp" />
 
         <CheckBox
             android:id="@+id/open_spo"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="45dp"
             android:text="开启血氧"
             tools:ignore="Suspicious0dp" />
 
         <CheckBox
             android:id="@+id/open_hrv"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="45dp"
             android:text="开启HRV"
             tools:ignore="Suspicious0dp" />
 
@@ -100,9 +110,9 @@
 
         <CheckBox
             android:id="@+id/open_dp"
-            android:layout_marginLeft="12dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="12dp"
             android:text="开启测量" />
 
     </LinearLayout>
@@ -115,17 +125,38 @@
         android:background="#c3c3c3"
         android:gravity="center"
         android:hint="---"
-        android:text="dfsdfasd"
-        android:padding="10dp"
+        android:text="---"
         android:textColor="@color/colorAccent"
         android:textSize="20sp" />
 
 
-    <Button
-        android:id="@+id/mkdir"
-        android:layout_marginTop="150dp"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:text="重新创建文件"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/input_fileName"
+            android:layout_width="200dp"
+            android:layout_height="50dp"
+            android:hint="输入文件名" />
+
+        <Button
+            android:id="@+id/mkdir"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="创建文件" />
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/close_all"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="关闭所有" />
+
 
 </LinearLayout>

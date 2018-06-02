@@ -1,6 +1,7 @@
 package com.laotunong.ble;
 
 import android.bluetooth.BluetoothDevice;
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -17,6 +18,13 @@ import android.widget.Toast;
 import com.laotunong.blelibrary.BLEManager;
 import com.laotunong.blelibrary.BLEResponseListener;
 import com.laotunong.blelibrary.ConnectionStateChangeListener;
+import com.laotunong.blelibrary.file.FileUtils;
+
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private BLEManager bleManager;
@@ -28,11 +36,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private RadioButton woman;
     private RadioGroup radioGroup;
     private EditText age;
+    private String filePath;
+    private EditText inputFile;
+
+    public static final String FILE_DIRECTORY = "BLE_UPI";
+    private File file;
+    private BufferedWriter bf;
+    private SimpleDateFormat dateFormat;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        initFile();
         final StringBuffer sb = new StringBuffer();
         final TextView mBlurtoothState = findViewById(R.id.device_name);
         final TextView responseText = findViewById(R.id.response_text);
@@ -44,11 +60,38 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         woman = findViewById(R.id.woman);
         age = findViewById(R.id.input_age);
         radioGroup = findViewById(R.id.radio);
+        inputFile = findViewById(R.id.input_fileName);
         findViewById(R.id.mkdir).setOnClickListener(this);
         dp.setOnClickListener(this);
         hrv.setOnClickListener(this);
         heart.setOnClickListener(this);
         spo.setOnClickListener(this);
+        findViewById(R.id.close_all).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (bleManager != null) {
+                    bleManager.write("cHR");
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    bleManager.write("cSPO2");
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    bleManager.write("cBP");
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    bleManager.write("cHRV");
+                }
+            }
+        });
         findViewById(R.id.start_ble).setOnClickListener(new View.OnClickListener() {
 
 
@@ -56,9 +99,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void onClick(View v) {
                 bleManager = BLEManager.create(MainActivity.this);
                 bleManager.startScan();
+                mBlurtoothState.setText("正在扫描蓝牙设备...");
+                if (bf == null)
+                    Toast.makeText(MainActivity.this, "未创建文件，数据不会保存", Toast.LENGTH_SHORT).show();
                 bleManager.setConnectionStateChangeListener(new ConnectionStateChangeListener() {
                     @Override
                     public void onError(BluetoothDevice device) {
+                        Toast.makeText(MainActivity.this, "蓝牙已断开", Toast.LENGTH_SHORT).show();
                         mBlurtoothState.setText(device.getName() + "未连接");
                     }
 
@@ -78,6 +125,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                     sb.append((char) aByte);
                                 }
                                 responseText.setText(sb.toString());
+                                if (bf != null) {
+                                    try {
+                                        String format = dateFormat.format(System.currentTimeMillis());
+                                        bf.write("time:" + format + "," + sb.toString());
+                                        bf.flush();
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
                                 System.out.println("response message=" + sb.toString());
                                 sb.setLength(0);
                             }
@@ -90,9 +146,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
+    private void initFile() {
+
+        File path = Environment.getExternalStorageDirectory();
+        filePath = path.getAbsolutePath();
+        dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+
+    }
+
     @Override
     public void onClick(View v) {
 
+        if (bleManager == null) {
+            Toast.makeText(this, "请先连接蓝牙", Toast.LENGTH_SHORT).show();
+            return;
+        }
         switch (v.getId()) {
             case R.id.open_spo:
                 if (!spo.isChecked()) {
@@ -161,6 +229,34 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             case R.id.mkdir:
 
+                if (TextUtils.isEmpty(inputFile.getText())) {
+                    Toast.makeText(this, "请输入文件名", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                if (inputFile.getText().toString().contains(".")) {
+                    Toast.makeText(this, "文件后缀默认为.csv，您无需输入后缀名", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                file = FileUtils.createFile(filePath, FILE_DIRECTORY, dateFormat.format(System.currentTimeMillis())+"_"+inputFile.getText().toString());
+
+                try {
+                    if (file.createNewFile()) {
+                        Toast.makeText(this, inputFile.getText() + ".csv创建成功，数据将写入此文件", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(this, "文件已存在，无需重复创建", Toast.LENGTH_SHORT).show();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+
+                try {
+                    bf = new BufferedWriter(new FileWriter(file, true));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 break;
         }
 

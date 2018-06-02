@@ -92,6 +92,8 @@ public class BLEManager {
                             }
 
                         } else {
+                            gatt.disconnect();
+                            gatt.close();
                             if (mConnectChangeListener != null) {
                                 mConnectChangeListener.onError(device);
                             }
@@ -104,14 +106,7 @@ public class BLEManager {
             @Override
             public void onServicesDiscovered(BluetoothGatt gatt, int status) {
                 super.onServicesDiscovered(gatt, status);
-//                List<BluetoothGattService> services = gatt.getServices();
-//                for (BluetoothGattService service : services) {
-//                    System.out.println(service.getUuid());
-//                    List<BluetoothGattCharacteristic> characteristics = service.getCharacteristics();
-//                    for (BluetoothGattCharacteristic characteristic : characteristics) {
-//                        System.out.println("---" + characteristic.getUuid());
-//                    }
-//                }
+
                 BluetoothGattService service = gatt.getService(UUID.fromString("6e400001-b5a3-f393-e0a9-e50e24dcca9e"));
                 writeCharateristic = service.getCharacteristic(UUID.fromString("6e400002-b5a3-f393-e0a9-e50e24dcca9e"));
                 BluetoothGattCharacteristic readCharacteristic = service.getCharacteristic(UUID.fromString("6e400003-b5a3-f393-e0a9-e50e24dcca9e"));
